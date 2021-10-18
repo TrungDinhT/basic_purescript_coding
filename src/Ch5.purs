@@ -36,6 +36,7 @@ infixl 1 applyFlipped as #
   Write functions in Data.List
     - singleton
     - null
+    - snoc (add an element to the end of the list)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -44,6 +45,10 @@ singleton x = x : Nil
 null :: ∀ a. List a -> Boolean
 null Nil = true
 null _ = false
+
+snoc :: ∀ a. List a -> a -> List a
+snoc Nil x = singleton x
+snoc (y : ys) x = y : snoc ys x
 
 {-
   Test function
@@ -57,3 +62,4 @@ test = do
   log $ show $ singleton "xyz"
   log $ show $ null Nil
   log $ show $ null ("abc" : Nil)
+  log $ show $ snoc (1 : 2 : Nil) 3
