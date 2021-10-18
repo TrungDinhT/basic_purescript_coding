@@ -35,10 +35,15 @@ infixl 1 applyFlipped as #
 {-
   Write functions in Data.List
     - singleton
+    - null
 -}
 
 singleton :: ∀ a. a -> List a
 singleton x = x : Nil
+
+null :: ∀ a. List a -> Boolean
+null Nil = true
+null _ = false
 
 {-
   Test function
@@ -50,3 +55,5 @@ test = do
   log $ flip const 1 2 # show
   flip const 1 2 # show # log
   log $ show $ singleton "xyz"
+  log $ show $ null Nil
+  log $ show $ null ("abc" : Nil)
