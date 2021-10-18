@@ -33,6 +33,14 @@ applyFlipped = flip apply
 infixl 1 applyFlipped as #
 
 {-
+  Write functions in Data.List
+    - singleton
+-}
+
+singleton :: ∀ a. a -> List a
+singleton x = x : Nil
+
+{-
   Test function
 -}
 
@@ -41,3 +49,4 @@ test = do
   log $ show $ flip const 1 2
   log $ flip const 1 2 # show
   flip const 1 2 # show # log
+  log $ show $ singleton "xyz"
