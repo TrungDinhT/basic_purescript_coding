@@ -8,10 +8,10 @@ import Effect.Console (log)
 
 {-
   Write functions in Data.Function
-    - flip
-    - const
-    - apply and operator $
-    - applyFlipped and operator #
+    - flip (reverse the order of a function with 2 arguments)
+    - const (return the first element <=> a const function)
+    - apply and operator $ (apply a function => to chain the functions together)
+    - applyFlipped and operator # (also to apply a function, but the argument comes before the function)
 -}
 
 flip :: ∀ a b c. (a -> b -> c) -> b -> a -> c
@@ -34,8 +34,8 @@ infixl 1 applyFlipped as #
 
 {-
   Write functions in Data.List
-    - singleton
-    - null
+    - singleton (create a list of one element)
+    - null (check if a list is empty)
     - snoc (add an element to the end of the list)
 -}
 
