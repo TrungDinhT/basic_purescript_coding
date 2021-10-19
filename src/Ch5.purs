@@ -52,8 +52,10 @@ snoc Nil x = singleton x
 snoc (y : ys) x = y : snoc ys x
 
 length :: ∀ a. List a -> Int
-length Nil = 0
-length (_ : xs) = 1 + length xs
+length l = go 0 l where
+  go :: Int -> List a -> Int
+  go acc Nil = acc
+  go acc (_ : xs) = go (acc + 1) xs
 
 {-
   Test function
