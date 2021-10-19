@@ -1,6 +1,6 @@
 module Ch5 where
 
-import Prelude (Unit, show, discard)
+import Prelude (Unit, (+), show, discard)
 
 import Data.List (List(..), (:))
 import Effect (Effect)
@@ -37,6 +37,7 @@ infixl 1 applyFlipped as #
     - singleton (create a list of one element)
     - null (check if a list is empty)
     - snoc (add an element to the end of the list)
+    - length (get the length of a list)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -49,6 +50,10 @@ null _ = false
 snoc :: ∀ a. List a -> a -> List a
 snoc Nil x = singleton x
 snoc (y : ys) x = y : snoc ys x
+
+length :: ∀ a. List a -> Int
+length Nil = 0
+length (_ : xs) = 1 + length xs
 
 {-
   Test function
@@ -63,3 +68,4 @@ test = do
   log $ show $ null Nil
   log $ show $ null ("abc" : Nil)
   log $ show $ snoc (1 : 2 : Nil) 3
+  log $ show $ length $ 1 : 2 : 3 : Nil
