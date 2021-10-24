@@ -3,6 +3,7 @@ module Ch5 where
 import Prelude (Unit, (+), show, discard)
 
 import Data.List (List(..), (:))
+import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Console (log)
 
@@ -38,6 +39,7 @@ infixl 1 applyFlipped as #
     - null (check if a list is empty)
     - snoc (add an element to the end of the list)
     - length (get the length of a list)
+    - head (get the head of a list)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -57,6 +59,10 @@ length l = go 0 l where
   go acc Nil = acc
   go acc (_ : xs) = go (acc + 1) xs
 
+head :: ∀ a. List a -> Maybe a
+head Nil = Nothing
+head (x : _) = Just x
+
 {-
   Test function
 -}
@@ -71,3 +77,5 @@ test = do
   log $ show $ null ("abc" : Nil)
   log $ show $ snoc (1 : 2 : Nil) 3
   log $ show $ length $ 1 : 2 : 3 : Nil
+  log $ show (head Nil :: Maybe Unit) -- this helps the compiler to deduce the returned type of head in case of Nil list
+  log $ show $ head ("abc" : "123" : Nil)
