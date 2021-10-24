@@ -41,6 +41,7 @@ infixl 1 applyFlipped as #
     - length (get the length of a list)
     - head (get the head of a list)
     - tail (get the rest of a list after removed the first element, i.e. the head)
+    - last (get the last element of a list)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -68,6 +69,11 @@ tail :: ∀ a. List a -> Maybe (List a)
 tail Nil = Nothing
 tail (_ : xs) = Just xs
 
+last :: ∀ a. List a -> Maybe a
+last Nil = Nothing
+last (x : Nil) = Just x
+last (_ : xs) = last xs
+
 {-
   Test function
 -}
@@ -86,3 +92,5 @@ test = do
   log $ show $ head ("abc" : "123" : Nil)
   log $ show $ tail (Nil :: List Unit) -- this helps the compiler to deduce the type of list elements in case of Nil list
   log $ show $ tail ("abc" : "123" : Nil)
+  log $ show (last Nil :: Maybe Unit)
+  log $ show $ last ("a" : "b" : "c" : Nil)
