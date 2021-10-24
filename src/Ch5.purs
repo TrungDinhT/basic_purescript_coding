@@ -40,6 +40,7 @@ infixl 1 applyFlipped as #
     - snoc (add an element to the end of the list)
     - length (get the length of a list)
     - head (get the head of a list)
+    - tail (get the rest of a list after removed the first element, i.e. the head)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -63,6 +64,10 @@ head :: ∀ a. List a -> Maybe a
 head Nil = Nothing
 head (x : _) = Just x
 
+tail :: ∀ a. List a -> Maybe (List a)
+tail Nil = Nothing
+tail (_ : xs) = Just xs
+
 {-
   Test function
 -}
@@ -79,3 +84,5 @@ test = do
   log $ show $ length $ 1 : 2 : 3 : Nil
   log $ show (head Nil :: Maybe Unit) -- this helps the compiler to deduce the returned type of head in case of Nil list
   log $ show $ head ("abc" : "123" : Nil)
+  log $ show $ tail (Nil :: List Unit) -- this helps the compiler to deduce the type of list elements in case of Nil list
+  log $ show $ tail ("abc" : "123" : Nil)
