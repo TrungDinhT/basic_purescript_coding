@@ -42,6 +42,7 @@ infixl 1 applyFlipped as #
     - head (get the head of a list)
     - tail (get the rest of a list after removed the first element, i.e. the head)
     - last (get the last element of a list)
+    - init (get the whole list except the last element)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -74,6 +75,24 @@ last Nil = Nothing
 last (x : Nil) = Just x
 last (_ : xs) = last xs
 
+init :: ∀ a. List a -> Maybe (List a)
+init Nil = Nothing
+{-
+-- This does not have any useless case, but it is not tail recursive
+init (x : xs) = 
+  let initRest = init xs in
+    case initRest of 
+      Just ys -> Just (x : ys)      
+      Nothing -> Just Nil
+-}
+-- This has the first case of local function which will be never called, but made to accommodate the compiler
+-- However, it's tail recursive
+init l = Just $ go l where
+  go :: ∀ a. List a -> List a
+  go Nil = Nil -- This case will be never executed => just to make the compilation passed
+  go (_ : Nil) = Nil
+  go (x : xs) = x : go xs
+
 {-
   Test function
 -}
@@ -94,3 +113,7 @@ test = do
   log $ show $ tail ("abc" : "123" : Nil)
   log $ show (last Nil :: Maybe Unit)
   log $ show $ last ("a" : "b" : "c" : Nil)
+  log $ show $ init (Nil :: List Unit)
+  log $ show $ init (1 : Nil)
+  log $ show $ init (1 : 2 : Nil)
+  log $ show $ init (1 : 2 : 3 : Nil)
