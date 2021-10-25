@@ -43,6 +43,7 @@ infixl 1 applyFlipped as #
     - tail (get the rest of a list after removed the first element, i.e. the head)
     - last (get the last element of a list)
     - init (get the whole list except the last element)
+    - uncons (return a record of head and tail from the list)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -93,6 +94,10 @@ init l = Just $ go l where
   go (_ : Nil) = Nil
   go (x : xs) = x : go xs
 
+uncons :: ∀ a. List a -> Maybe { head :: a, tail :: List a}
+uncons Nil = Nothing
+uncons (x : xs) = Just {head: x, tail: xs}
+
 {-
   Test function
 -}
@@ -117,3 +122,4 @@ test = do
   log $ show $ init (1 : Nil)
   log $ show $ init (1 : 2 : Nil)
   log $ show $ init (1 : 2 : 3 : Nil)
+  log $ show $ uncons (1 : 2 : 3 : Nil)
