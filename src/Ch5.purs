@@ -60,7 +60,6 @@ snoc (y : ys) x = y : snoc ys x
 
 length :: ∀ a. List a -> Int
 length l = go 0 l where
-  go :: Int -> List a -> Int
   go acc Nil = acc
   go acc (_ : xs) = go (acc + 1) xs
 
@@ -90,7 +89,6 @@ init (x : xs) =
 -- This has the first case of local function which will be never called, but made to accommodate the compiler
 -- However, it's tail recursive
 init l = Just $ go l where
-  go :: ∀ a. List a -> List a
   go Nil = Nil -- This case will be never executed => just to make the compilation passed
   go (_ : Nil) = Nil
   go (x : xs) = x : go xs
