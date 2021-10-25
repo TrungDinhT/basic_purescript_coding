@@ -1,6 +1,6 @@
 module Ch5 where
 
-import Prelude (Unit, (+), show, discard)
+import Prelude (Unit, discard, otherwise, show, negate, (+), (-), (<), (==))
 
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
@@ -44,6 +44,7 @@ infixl 1 applyFlipped as #
     - last (get the last element of a list)
     - init (get the whole list except the last element)
     - uncons (return a record of head and tail from the list)
+    - index (get the element at index in a list)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -98,6 +99,20 @@ uncons :: ∀ a. List a -> Maybe { head :: a, tail :: List a}
 uncons Nil = Nothing
 uncons (x : xs) = Just {head: x, tail: xs}
 
+index :: ∀ a. List a -> Int -> Maybe a
+index Nil _ = Nothing
+{-
+-- use guard only
+index (x : xs) idx
+  | idx < 0 = Nothing
+  | idx == 0 = Just x
+  | otherwise = index xs (idx - 1)
+-}
+-- use pattern matching with guard
+index _ i | i < 0 = Nothing
+index (x : _) 0 = Just x
+index (_ : xs) idx = index xs (idx - 1)
+
 {-
   Test function
 -}
@@ -123,3 +138,7 @@ test = do
   log $ show $ init (1 : 2 : Nil)
   log $ show $ init (1 : 2 : 3 : Nil)
   log $ show $ uncons (1 : 2 : 3 : Nil)
+  log $ show $ index (1 : Nil) 4
+  log $ show $ index (1 : 2 : 3 : Nil) 1
+  log $ show $ index (Nil :: List Unit) 0
+  log $ show $ index (1 : 2 : 3 : Nil) (-99)
