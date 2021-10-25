@@ -44,7 +44,7 @@ infixl 1 applyFlipped as #
     - last (get the last element of a list)
     - init (get the whole list except the last element)
     - uncons (return a record of head and tail from the list)
-    - index (get the element at index in a list)
+    - index (get the element at index in a list) and operator !!
 -}
 
 singleton :: ∀ a. a -> List a
@@ -113,6 +113,10 @@ index _ i | i < 0 = Nothing
 index (x : _) 0 = Just x
 index (_ : xs) idx = index xs (idx - 1)
 
+-- To facilitate the fact that !! binary operator is used for index, the Int parameter is the 2nd parameter
+-- of index function, even though it changes more often than the list parameter
+infixr 8 index as !!
+
 {-
   Test function
 -}
@@ -142,3 +146,4 @@ test = do
   log $ show $ index (1 : 2 : 3 : Nil) 1
   log $ show $ index (Nil :: List Unit) 0
   log $ show $ index (1 : 2 : 3 : Nil) (-99)
+  log $ show $ (1 : 2 : 3 : Nil) !! 1
