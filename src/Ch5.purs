@@ -1,6 +1,6 @@
 module Ch5 where
 
-import Prelude (Unit, discard, otherwise, show, negate, (+), (-), (<), (==))
+import Prelude (Unit, discard, otherwise, show, negate, (+), (-), (<), (/=), (>=))
 
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
@@ -45,6 +45,7 @@ infixl 1 applyFlipped as #
     - init (get the whole list except the last element)
     - uncons (return a record of head and tail from the list)
     - index (get the element at index in a list) and operator !!
+    - findIndex (get the index of an element satisfying a predicate in the list)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -115,6 +116,13 @@ index (_ : xs) idx = index xs (idx - 1)
 -- of index function, even though it changes more often than the list parameter
 infixr 8 index as !!
 
+findIndex :: ∀ a. (a -> Boolean) -> List a -> Maybe Int
+findIndex p l = go 0 l where
+  go _ Nil = Nothing
+  go idx (x : xs)
+    | p x = Just idx 
+    | otherwise = go (idx + 1) xs 
+
 {-
   Test function
 -}
@@ -145,3 +153,6 @@ test = do
   log $ show $ index (Nil :: List Unit) 0
   log $ show $ index (1 : 2 : 3 : Nil) (-99)
   log $ show $ (1 : 2 : 3 : Nil) !! 1
+  log $ show $ findIndex (_ >= 2) (1 : 2 : 3 : Nil)
+  log $ show $ findIndex (_ >= 99) (1 : 2 : 3 : Nil)
+  log $ show $ findIndex (10 /= _) (Nil :: List Int)
