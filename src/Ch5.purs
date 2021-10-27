@@ -1,6 +1,6 @@
 module Ch5 where
 
-import Prelude (Unit, discard, otherwise, show, negate, (+), (-), (<), (/=), (>=))
+import Prelude (Unit, discard, negate, otherwise, show, (+), (-), (/=), (<), (==), (>=))
 
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
@@ -46,6 +46,7 @@ infixl 1 applyFlipped as #
     - uncons (return a record of head and tail from the list)
     - index (get the element at index in a list) and operator !!
     - findIndex (get the index of an element satisfying a predicate in the list)
+    - findLastIndex (get the last index of the elements satisfying a predicate in the list)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -123,6 +124,13 @@ findIndex p l = go 0 l where
     | p x = Just idx 
     | otherwise = go (idx + 1) xs 
 
+findLastIndex :: ∀ a. (a -> Boolean) -> List a -> Maybe Int
+findLastIndex p l = go 0 Nothing l where
+  go :: Int -> Maybe Int -> List a -> Maybe Int -- type of local function use the type a defined in the parent function
+  go _ Nothing Nil = Nothing
+  go _ lastIdx Nil = lastIdx
+  go idx lastIdx (x : xs) = go (idx + 1) (if p x then Just idx else lastIdx) xs
+
 {-
   Test function
 -}
@@ -156,3 +164,6 @@ test = do
   log $ show $ findIndex (_ >= 2) (1 : 2 : 3 : Nil)
   log $ show $ findIndex (_ >= 99) (1 : 2 : 3 : Nil)
   log $ show $ findIndex (10 /= _) (Nil :: List Int)
+  log $ show $ findLastIndex (_ == 10) (Nil :: List Int)
+  log $ show $ findLastIndex (_ == 10) (10 : 5 : 10 : -1 : 2 : 10 : Nil)
+  log $ show $ findLastIndex (_ == 10) (11 : 12 : Nil)
