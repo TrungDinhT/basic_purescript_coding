@@ -1,6 +1,6 @@
 module Ch5 where
 
-import Prelude (Unit, discard, negate, otherwise, show, (+), (-), (/=), (<), (==), (>=))
+import Prelude (Unit, discard, negate, otherwise, show, (+), (-), (/=), (<), (==), (>=), type (~>))
 
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
@@ -47,6 +47,7 @@ infixl 1 applyFlipped as #
     - index (get the element at index in a list) and operator !!
     - findIndex (get the index of an element satisfying a predicate in the list)
     - findLastIndex (get the last index of the elements satisfying a predicate in the list)
+    - reverse (reverse a list)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -131,6 +132,11 @@ findLastIndex p l = go 0 Nothing l where
   go _ lastIdx Nil = lastIdx
   go idx lastIdx (x : xs) = go (idx + 1) (if p x then Just idx else lastIdx) xs
 
+reverse :: List ~> List
+reverse l = go Nil l where -- imagine each time we pop the head of the list, we push it to the head of reversed
+  go reversed Nil = reversed
+  go reversed (x : xs) = go (x : reversed) xs
+
 {-
   Test function
 -}
@@ -167,3 +173,5 @@ test = do
   log $ show $ findLastIndex (_ == 10) (Nil :: List Int)
   log $ show $ findLastIndex (_ == 10) (10 : 5 : 10 : -1 : 2 : 10 : Nil)
   log $ show $ findLastIndex (_ == 10) (11 : 12 : Nil)
+  log $ show $ reverse (Nil :: List Int)
+  log $ show $ reverse (10 : 20 : 30 : Nil)
