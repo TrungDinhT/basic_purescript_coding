@@ -48,6 +48,7 @@ infixl 1 applyFlipped as #
     - findIndex (get the index of an element satisfying a predicate in the list)
     - findLastIndex (get the last index of the elements satisfying a predicate in the list)
     - reverse (reverse a list)
+    - concat (takes a List of Lists and returns a single List with all element in the same order)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -137,6 +138,11 @@ reverse l = go Nil l where -- imagine each time we pop the head of the list, we 
   go reversed Nil = reversed
   go reversed (x : xs) = go (x : reversed) xs
 
+concat :: ∀ a. List (List a) -> List a
+concat Nil = Nil
+concat (Nil : xss) = concat xss
+concat ((x : xs) : xss) = x : concat (xs : xss)
+
 {-
   Test function
 -}
@@ -175,3 +181,4 @@ test = do
   log $ show $ findLastIndex (_ == 10) (11 : 12 : Nil)
   log $ show $ reverse (Nil :: List Int)
   log $ show $ reverse (10 : 20 : 30 : Nil)
+  log $ show $ concat ((1 : 2 : 3 : Nil) : (4 : 5 : Nil) : (6 : Nil) : (Nil) : Nil)
