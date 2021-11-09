@@ -1,6 +1,6 @@
 module Ch5 where
 
-import Prelude (Unit, discard, negate, otherwise, show, (+), (-), (/=), (<), (==), (>=), type (~>))
+import Prelude (Unit, discard, negate, otherwise, show, (+), (-), (/=), (<), (==), (>), (>=), type (~>), (<<<))
 
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
@@ -49,6 +49,7 @@ infixl 1 applyFlipped as #
     - findLastIndex (get the last index of the elements satisfying a predicate in the list)
     - reverse (reverse a list)
     - concat (takes a List of Lists and returns a single List with all element in the same order)
+    - filter (KEEP the elements of a List, which satisfies a certain condition)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -143,6 +144,18 @@ concat Nil = Nil
 concat (Nil : xss) = concat xss
 concat ((x : xs) : xss) = x : concat (xs : xss)
 
+filter :: ∀ a. (a -> Boolean) -> List a -> List a
+{-
+-- Not tail recursive version
+filter _ Nil = Nil
+filter pred (x : xs) = 
+  if pred x then x : filter preed xs 
+  else filter pred xs
+-}
+filter pred = reverse <<< go Nil where
+  go nl Nil = nl
+  go nl (x : xs) = if pred x then go (x : nl) xs else go nl xs
+
 {-
   Test function
 -}
@@ -182,3 +195,4 @@ test = do
   log $ show $ reverse (Nil :: List Int)
   log $ show $ reverse (10 : 20 : 30 : Nil)
   log $ show $ concat ((1 : 2 : 3 : Nil) : (4 : 5 : Nil) : (6 : Nil) : (Nil) : Nil)
+  log $ show $ filter (4 > _) $ (1 : 2 : 3 : 4 : 5 : 6 : Nil)
