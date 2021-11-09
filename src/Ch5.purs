@@ -146,12 +146,13 @@ concat ((x : xs) : xss) = x : concat (xs : xss)
 
 filter :: ∀ a. (a -> Boolean) -> List a -> List a
 {-
--- Not tail recursive version
+-- Not tail recursive version, this is fast but needs more space (stack for recursion)
 filter _ Nil = Nil
 filter pred (x : xs) = 
   if pred x then x : filter preed xs 
   else filter pred xs
 -}
+-- Tail recursive version, slower with 2x passing throught the list, but need less space
 filter pred = reverse <<< go Nil where
   go nl Nil = nl
   go nl (x : xs) = if pred x then go (x : nl) xs else go nl xs
