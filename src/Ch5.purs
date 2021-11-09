@@ -134,7 +134,7 @@ findLastIndex p l = go 0 Nothing l where
   go idx lastIdx (x : xs) = go (idx + 1) (if p x then Just idx else lastIdx) xs
 
 reverse :: List ~> List
-reverse l = go Nil l where -- imagine each time we pop the head of the list, we push it to the head of reversed
+reverse = go Nil where -- imagine each time we pop the head of the list, we push it to the head of reversed
   go reversed Nil = reversed
   go reversed (x : xs) = go (x : reversed) xs
 
