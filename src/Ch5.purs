@@ -1,6 +1,6 @@
 module Ch5 where
 
-import Prelude (Unit, discard, negate, otherwise, show, (+), (-), (/=), (<), (==), (>), (>=), type (~>), (<<<))
+import Prelude (Unit, discard, negate, otherwise, show, max, (+), (-), (/=), (<), (==), (>), (>=), type (~>), (<<<))
 
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
@@ -52,6 +52,7 @@ infixl 1 applyFlipped as #
     - filter (KEEP the elements of a List, which satisfies a certain condition)
     - catMaybes (given a list of Maybe values, filter Nothing and unwrap Just into a List)
     - range (given 2 endpoints, return a List, ascending or descending based on the 2 endpoints)
+    - take (take a number of elements from the List, or all elements if not enough)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -180,6 +181,20 @@ range start end = go Nil end where
     | otherwise = go (end' : l) (end' - stepBack)
   stepBack = if start < end then 1 else (-1)
 
+take :: ∀ a. Int -> List a -> List a
+-- Non tail-recursive version
+take n = go (max 0 n) where
+  go 0 _ = Nil
+  go _ Nil = Nil
+  go n' (x : xs) = x : take (n' - 1) xs
+{-
+-- Tail-recursive but traversing the list twice
+take n = reverse <<< go Nil (max 0 n) where
+  go nl 0 _ = nl
+  go nl _ Nil = nl
+  go nl n' (x : xs) = go (x : nl) (n' - 1) xs
+-}
+
 {-
   Test function
 -}
@@ -223,3 +238,6 @@ test = do
   log $ show $ catMaybes (Just 1 : Nothing : Just 2 : Nothing : Nothing : Just 5 : Nil)
   log $ show $ range 1 10
   log $ show $ range 3 (-3)
+  log $ show $ take (-1) (1 : 2 : 3 : Nil)
+  log $ show $ take 5 (12 : 13 : 14 : Nil)
+  log $ show $ take 5 (-7 : 9 : 0 : 12 : -13 : 45 : 976 : -19 : Nil)
