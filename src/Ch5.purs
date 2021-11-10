@@ -50,6 +50,7 @@ infixl 1 applyFlipped as #
     - reverse (reverse a list)
     - concat (takes a List of Lists and returns a single List with all element in the same order)
     - filter (KEEP the elements of a List, which satisfies a certain condition)
+    - catMaybes (given a list of Maybe values, filter Nothing and unwrap Just into a List)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -157,6 +158,19 @@ filter pred = reverse <<< go Nil where
   go nl Nil = nl
   go nl (x : xs) = if pred x then go (x : nl) xs else go nl xs
 
+catMaybes :: ∀ a. List (Maybe a) -> List a
+-- Non tail-recursive version
+catMaybes Nil = Nil
+catMaybes (Nothing : xs) = catMaybes xs
+catMaybes (Just x : xs) = x : catMaybes xs
+{-
+-- Tail-recursive version
+catMaybes = reverse <<< go Nil where
+  go nl Nil = nl
+  go nl (Nothing : xs) = go nl xs
+  go nl (Just x : xs) = go (x : nl) xs
+-}
+
 {-
   Test function
 -}
@@ -197,3 +211,4 @@ test = do
   log $ show $ reverse (10 : 20 : 30 : Nil)
   log $ show $ concat ((1 : 2 : 3 : Nil) : (4 : 5 : Nil) : (6 : Nil) : (Nil) : Nil)
   log $ show $ filter (4 > _) $ (1 : 2 : 3 : 4 : 5 : 6 : Nil)
+  log $ show $ catMaybes (Just 1 : Nothing : Just 2 : Nothing : Nothing : Just 5 : Nil)
