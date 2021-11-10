@@ -51,6 +51,7 @@ infixl 1 applyFlipped as #
     - concat (takes a List of Lists and returns a single List with all element in the same order)
     - filter (KEEP the elements of a List, which satisfies a certain condition)
     - catMaybes (given a list of Maybe values, filter Nothing and unwrap Just into a List)
+    - range (given 2 endpoints, return a List, ascending or descending based on the 2 endpoints)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -171,6 +172,14 @@ catMaybes = reverse <<< go Nil where
   go nl (Just x : xs) = go (x : nl) xs
 -}
 
+-- !!! This seems more readable than the solution in the book
+range :: Int -> Int -> List Int
+range start end = go Nil end where
+  go l end'
+    | start == end' = start : l
+    | otherwise = go (end' : l) (end' - stepBack)
+  stepBack = if start < end then 1 else (-1)
+
 {-
   Test function
 -}
@@ -212,3 +221,5 @@ test = do
   log $ show $ concat ((1 : 2 : 3 : Nil) : (4 : 5 : Nil) : (6 : Nil) : (Nil) : Nil)
   log $ show $ filter (4 > _) $ (1 : 2 : 3 : 4 : 5 : 6 : Nil)
   log $ show $ catMaybes (Just 1 : Nothing : Just 2 : Nothing : Nothing : Just 5 : Nil)
+  log $ show $ range 1 10
+  log $ show $ range 3 (-3)
