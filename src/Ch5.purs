@@ -53,6 +53,7 @@ infixl 1 applyFlipped as #
     - catMaybes (given a list of Maybe values, filter Nothing and unwrap Just into a List)
     - range (given 2 endpoints, return a List, ascending or descending based on the 2 endpoints)
     - take (take a number of elements from the List, or all elements if not enough)
+    - drop (drop a number of elements from the List, or all elements if not enough)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -195,6 +196,12 @@ take n = reverse <<< go Nil (max 0 n) where
   go nl n' (x : xs) = go (x : nl) (n' - 1) xs
 -}
 
+drop :: ∀ a. Int -> List a -> List a
+drop n = go (max 0 n) where
+  go 0 l = l
+  go _ Nil = Nil
+  go n' (_ : xs) = go (n' - 1) xs 
+
 {-
   Test function
 -}
@@ -241,3 +248,5 @@ test = do
   log $ show $ take (-1) (1 : 2 : 3 : Nil)
   log $ show $ take 5 (12 : 13 : 14 : Nil)
   log $ show $ take 5 (-7 : 9 : 0 : 12 : -13 : 45 : 976 : -19 : Nil)
+  log $ show $ drop 2 (1 : 2 : 3 : 4 : 5 : 6 : 7 : Nil)
+  log $ show $ drop 10 (Nil :: List Unit)
