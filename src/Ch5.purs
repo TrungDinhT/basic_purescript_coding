@@ -55,6 +55,7 @@ infixl 1 applyFlipped as #
     - take (take a number of elements from the List, or all elements if not enough)
     - drop (drop a number of elements from the List, or all elements if not enough)
     - takeWhile (take with a predicate, until the predicate returns false, it stops)
+    - dropWhile (drop with a predicate, until the predicate returns false, it stops)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -214,6 +215,10 @@ takeWhile pred = reverse <<< go Nil where
   go nl (x : xs) = if pred x then go (x : nl) xs else nl
 -}
 
+dropWhile :: ∀ a. (a -> Boolean) -> List a -> List a
+dropWhile _ Nil = Nil
+dropWhile pred l@(x : xs) = if pred x then dropWhile pred xs else l -- l@ syntax means to create a variable l for full list before destructuring it
+
 {-
   Test function
 -}
@@ -264,3 +269,5 @@ test = do
   log $ show $ drop 10 (Nil :: List Unit)
   log $ show $ takeWhile (_ > 3) (5 : 4 : 3 : 99 : 101 : Nil)
   log $ show $ takeWhile (_ == -17) (1 : 2 : 3 : Nil)
+  log $ show $ dropWhile (_ > 3) (5 : 4 : 3 : 99 : 101 : Nil)
+  log $ show $ dropWhile (_ == -17) (1 : 2 : 3 : Nil)
