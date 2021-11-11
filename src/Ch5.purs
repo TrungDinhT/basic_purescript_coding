@@ -54,6 +54,7 @@ infixl 1 applyFlipped as #
     - range (given 2 endpoints, return a List, ascending or descending based on the 2 endpoints)
     - take (take a number of elements from the List, or all elements if not enough)
     - drop (drop a number of elements from the List, or all elements if not enough)
+    - takeWhile (take with a predicate, until the predicate returns false, it stops)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -202,6 +203,17 @@ drop n = go (max 0 n) where
   go _ Nil = Nil
   go n' (_ : xs) = go (n' - 1) xs 
 
+takeWhile :: ∀ a. (a -> Boolean) -> List a -> List a
+-- Non tail-recursive version
+takeWhile _ Nil = Nil
+takeWhile pred (x : xs) = if pred x then x : takeWhile pred xs else Nil
+{-
+-- Tail recursive version
+takeWhile pred = reverse <<< go Nil where
+  go _ Nil = Nil
+  go nl (x : xs) = if pred x then go (x : nl) xs else nl
+-}
+
 {-
   Test function
 -}
@@ -250,3 +262,5 @@ test = do
   log $ show $ take 5 (-7 : 9 : 0 : 12 : -13 : 45 : 976 : -19 : Nil)
   log $ show $ drop 2 (1 : 2 : 3 : 4 : 5 : 6 : 7 : Nil)
   log $ show $ drop 10 (Nil :: List Unit)
+  log $ show $ takeWhile (_ > 3) (5 : 4 : 3 : 99 : 101 : Nil)
+  log $ show $ takeWhile (_ == -17) (1 : 2 : 3 : Nil)
