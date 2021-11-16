@@ -1,9 +1,10 @@
 module Ch5 where
 
-import Prelude (Unit, discard, negate, otherwise, show, max, (+), (-), (/=), (<), (==), (>), (>=), type (~>), (<<<))
+import Prelude (Unit, discard, negate, otherwise, show, max, (+), (-), (/=), (<), (==), (>), (>=), type (~>), (<<<), (>>>))
 
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
+import Data.Tuple (Tuple(..), snd)
 import Effect (Effect)
 import Effect.Console (log)
 
@@ -56,6 +57,7 @@ infixl 1 applyFlipped as #
     - drop (drop a number of elements from the List, or all elements if not enough)
     - takeWhile (take with a predicate, until the predicate returns false, it stops)
     - dropWhile (drop with a predicate, until the predicate returns false, it stops)
+    - takeEnd (take a number of elements before the end of the List, or all elements if not enough)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -219,6 +221,13 @@ dropWhile :: ∀ a. (a -> Boolean) -> List a -> List a
 dropWhile _ Nil = Nil
 dropWhile pred l@(x : xs) = if pred x then dropWhile pred xs else l -- l@ syntax means to create a variable l for full list before destructuring it
 
+takeEnd :: ∀ a. Int -> List a -> List a
+-- The most important point here is to combine operator # (applyFlipped on lambda function with the recursion results -> allow recursion first and then computes on that later)
+takeEnd n = go >>> snd where
+  go Nil = Tuple 0 Nil
+  go (x : xs) = go xs 
+    # \(Tuple c nl) -> Tuple (c + 1) $ if c < n then x : nl else nl
+
 {-
   Test function
 -}
@@ -271,3 +280,5 @@ test = do
   log $ show $ takeWhile (_ == -17) (1 : 2 : 3 : Nil)
   log $ show $ dropWhile (_ > 3) (5 : 4 : 3 : 99 : 101 : Nil)
   log $ show $ dropWhile (_ == -17) (1 : 2 : 3 : Nil)
+  log $ show $ takeEnd 3 (1 : 2 : 3 : 4 : 5 : 6 : Nil)
+  log $ show $ takeEnd 10 (1 : Nil)
