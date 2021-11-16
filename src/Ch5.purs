@@ -59,6 +59,7 @@ infixl 1 applyFlipped as #
     - dropWhile (drop with a predicate, until the predicate returns false, it stops)
     - takeEnd (take a number of elements before the end of the List, or all elements if not enough)
     - dropEnd (drop a number of elements before the end of the List, or all elements if not enough)
+    - zip (take two lists and zip them into a list of tuple of two, whose length is equal to the shortest list)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -235,6 +236,12 @@ dropEnd n = go >>> snd where
   go (x : xs) = go xs 
     # \(Tuple c nl) -> Tuple (c + 1) $ if c < n then Nil else x : nl
 
+zip :: ∀ a b. List a -> List b -> List (Tuple a b)
+zip Nil _ = Nil
+zip _ Nil = Nil
+zip (x : xs) (y : ys) = Tuple x y : zip xs ys
+
+
 {-
   Test function
 -}
@@ -291,3 +298,6 @@ test = do
   log $ show $ takeEnd 10 (1 : Nil)
   log $ show $ dropEnd 3 (1 : 2 : 3 : 4 : 5 : 6 : Nil)
   log $ show $ dropEnd 10 (1 : Nil)
+  log $ show $ zip (1 : 2 : 3 : Nil) ("a" : "b" : "c" : "d" : "e" : Nil)
+  log $ show $ zip ("a" : "b" : "c" : "d" : "e" : Nil) (1 : 2 : 3 : Nil)
+  log $ show $ zip (Nil :: List Unit) (1 : 2 : Nil)
