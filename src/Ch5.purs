@@ -58,6 +58,7 @@ infixl 1 applyFlipped as #
     - takeWhile (take with a predicate, until the predicate returns false, it stops)
     - dropWhile (drop with a predicate, until the predicate returns false, it stops)
     - takeEnd (take a number of elements before the end of the List, or all elements if not enough)
+    - dropEnd (drop a number of elements before the end of the List, or all elements if not enough)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -228,6 +229,12 @@ takeEnd n = go >>> snd where
   go (x : xs) = go xs 
     # \(Tuple c nl) -> Tuple (c + 1) $ if c < n then x : nl else nl
 
+dropEnd :: ∀ a. Int -> List a -> List a
+dropEnd n = go >>> snd where
+  go Nil = Tuple 0 Nil
+  go (x : xs) = go xs 
+    # \(Tuple c nl) -> Tuple (c + 1) $ if c < n then Nil else x : nl
+
 {-
   Test function
 -}
@@ -282,3 +289,5 @@ test = do
   log $ show $ dropWhile (_ == -17) (1 : 2 : 3 : Nil)
   log $ show $ takeEnd 3 (1 : 2 : 3 : 4 : 5 : 6 : Nil)
   log $ show $ takeEnd 10 (1 : Nil)
+  log $ show $ dropEnd 3 (1 : 2 : 3 : 4 : 5 : 6 : Nil)
+  log $ show $ dropEnd 10 (1 : Nil)
