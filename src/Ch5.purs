@@ -60,6 +60,7 @@ infixl 1 applyFlipped as #
     - takeEnd (take a number of elements before the end of the List, or all elements if not enough)
     - dropEnd (drop a number of elements before the end of the List, or all elements if not enough)
     - zip (take two lists and zip them into a list of tuple of two, whose length is equal to the shortest list)
+    - unzip (take a list of tuple of two and return a tuple of two lists)
 -}
 
 singleton :: ∀ a. a -> List a
@@ -241,6 +242,10 @@ zip Nil _ = Nil
 zip _ Nil = Nil
 zip (x : xs) (y : ys) = Tuple x y : zip xs ys
 
+unzip :: ∀ a b. List (Tuple a b) -> Tuple (List a) (List b)
+unzip Nil = Tuple Nil Nil
+unzip (Tuple x y : ts) = unzip ts
+  # \(Tuple xs ys) -> Tuple (x : xs) (y : ys)
 
 {-
   Test function
@@ -301,3 +306,6 @@ test = do
   log $ show $ zip (1 : 2 : 3 : Nil) ("a" : "b" : "c" : "d" : "e" : Nil)
   log $ show $ zip ("a" : "b" : "c" : "d" : "e" : Nil) (1 : 2 : 3 : Nil)
   log $ show $ zip (Nil :: List Unit) (1 : 2 : Nil)
+  log $ show $ unzip (Tuple 1 "a" : Tuple 2 "b" : Tuple 3 "c" : Nil)
+  log $ show $ unzip (Tuple "a" 1 : Tuple "b" 2 : Tuple "c" 3 : Nil)
+  log $ show $ unzip (Nil :: List (Tuple Unit Unit))
