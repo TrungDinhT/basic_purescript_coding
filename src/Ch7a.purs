@@ -1,6 +1,6 @@
 module Ch7a where
 
-import Prelude (Unit, show, discard, ($), (==), (<), (>), (<=), (>=))
+import Prelude (Unit, show, discard, ($), (==), (<), (>), (<=))
 import Data.Eq (class Eq)
 import Data.Ord (class Ord, Ordering(..), compare)
 import Effect (Effect)
@@ -12,6 +12,7 @@ data Maybe a = Nothing | Just a
     Write method for type classes
         - Eq for Maybe
         - Ord for Maybe
+        - Function greaterThanOrEq and its companion operator >=
 -}
 
 instance eqMaybe :: Eq a => Eq (Maybe a) where
@@ -24,6 +25,14 @@ instance ordMaybe :: Ord a => Ord (Maybe a) where
     compare (Just x) (Just y) = compare x y 
     compare Nothing _ = LT
     compare _ Nothing = GT
+
+greaterThanOrEq :: ∀ a. Ord a => a -> a -> Boolean
+greaterThanOrEq x y = case compare x y of
+    LT -> false
+    _ -> true
+
+-- infixl because the >= operator reads from left to right
+infixl 4 greaterThanOrEq as >=
 
 {-
   Test function
