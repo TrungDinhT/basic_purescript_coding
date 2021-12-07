@@ -1,8 +1,10 @@
 module Ch7a where
 
 import Prelude (Unit, show, discard, ($), (==), (<), (>), (<=))
+
 import Data.Eq (class Eq)
 import Data.Ord (class Ord, Ordering(..), compare)
+
 import Effect (Effect)
 import Effect.Console (log)
 
