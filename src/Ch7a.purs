@@ -1,9 +1,10 @@
 module Ch7a where
 
-import Prelude (Unit, show, discard, ($), (==), (<), (>), (<=))
+import Prelude (Unit, show, discard, ($), (==), (<), (>), (<=), (<>))
 
 import Data.Eq (class Eq)
 import Data.Ord (class Ord, Ordering(..), compare)
+import Data.Show (class Show)
 
 import Effect (Effect)
 import Effect.Console (log)
@@ -15,6 +16,7 @@ data Maybe a = Nothing | Just a
         - Eq for Maybe
         - Ord for Maybe
         - Function greaterThanOrEq and its companion operator >=
+        - Show for Maybe
 -}
 
 instance eqMaybe :: Eq a => Eq (Maybe a) where
@@ -36,6 +38,10 @@ greaterThanOrEq x y = case compare x y of
 -- infixl because the >= operator reads from left to right
 infixl 4 greaterThanOrEq as >=
 
+instance showMaybe :: Show a => Show (Maybe a) where
+    show Nothing = "Nothing"
+    show (Just x) = "(Just " <> show x <> ")"
+
 {-
   Test function
 -}
@@ -54,4 +60,7 @@ test = do
     log $ show $ Just 10 >= Just 10
     log $ show $ Just 99 > Nothing
     log $ show $ Just 99 < Nothing
+    log "------------------"
+    log $ show $ Just "abc"
+    log $ show $ (Nothing :: Maybe Unit)
 
