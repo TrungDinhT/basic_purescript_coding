@@ -1,10 +1,12 @@
 module Ch7a where
 
-import Prelude (Unit, show, discard, ($), (==), (<), (>), (<=), (<>))
+import Prelude (Unit, show, discard, ($), (==), (<), (>), (<=))
 
 import Data.Eq (class Eq)
 import Data.Ord (class Ord, Ordering(..), compare)
 import Data.Show (class Show)
+import Data.Generic.Rep (class Generic)
+import Data.Show.Generic (genericShow)
 
 import Effect (Effect)
 import Effect.Console (log)
@@ -19,16 +21,26 @@ data Maybe a = Nothing | Just a
         - Show for Maybe
 -}
 
+{-
+-- From-scratch version
 instance eqMaybe :: Eq a => Eq (Maybe a) where
     eq Nothing Nothing = true
     eq (Just x) (Just y) = x == y
     eq _ _ = false
+-}
+-- Derived version
+derive instance eqMaybe :: Eq a => Eq (Maybe a)
 
+{-
+-- From-scratch version
 instance ordMaybe :: Ord a => Ord (Maybe a) where
     compare Nothing Nothing = EQ
     compare (Just x) (Just y) = compare x y 
     compare Nothing _ = LT
     compare _ Nothing = GT
+-}
+-- Derived version
+derive instance ordMaybe :: Ord a => Ord (Maybe a)
 
 greaterThanOrEq :: ∀ a. Ord a => a -> a -> Boolean
 greaterThanOrEq x y = case compare x y of
@@ -38,9 +50,15 @@ greaterThanOrEq x y = case compare x y of
 -- infixl because the >= operator reads from left to right
 infixl 4 greaterThanOrEq as >=
 
+{-
+-- From-scratch version
 instance showMaybe :: Show a => Show (Maybe a) where
     show Nothing = "Nothing"
     show (Just x) = "(Just " <> show x <> ")"
+-}
+derive instance genericMaybe :: Generic (Maybe a) _
+instance showMaybe :: Show a => Show (Maybe a) where
+    show = genericShow
 
 {-
   Test function
