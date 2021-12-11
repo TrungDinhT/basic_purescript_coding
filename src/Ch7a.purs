@@ -1,9 +1,9 @@
 module Ch7a where
 
-import Prelude (Unit, show, discard, ($), (==), (<), (>), (<=))
+import Prelude (Unit, show, discard, ($), (==), (<), (>), (<=), (>=))
 
 import Data.Eq (class Eq)
-import Data.Ord (class Ord, Ordering(..), compare)
+import Data.Ord (class Ord)
 import Data.Show (class Show)
 import Data.Generic.Rep (class Generic)
 import Data.Show.Generic (genericShow)
@@ -11,13 +11,15 @@ import Data.Show.Generic (genericShow)
 import Effect (Effect)
 import Effect.Console (log)
 
+----------------------------------------------------------------------------
+
 data Maybe a = Nothing | Just a
 
 {-
-    Write method for type classes
+    Write method for type classe Maybe
         - Eq for Maybe
         - Ord for Maybe
-        - Function greaterThanOrEq and its companion operator >=
+        - Function greaterThanOrEq and its companion operator >= (Commented, since it's only for learning purpose)
         - Show for Maybe
 -}
 
@@ -42,6 +44,7 @@ instance ordMaybe :: Ord a => Ord (Maybe a) where
 -- Derived version
 derive instance ordMaybe :: Ord a => Ord (Maybe a)
 
+{-
 greaterThanOrEq :: ∀ a. Ord a => a -> a -> Boolean
 greaterThanOrEq x y = case compare x y of
     LT -> false
@@ -49,6 +52,7 @@ greaterThanOrEq x y = case compare x y of
 
 -- infixl because the >= operator reads from left to right
 infixl 4 greaterThanOrEq as >=
+-}
 
 {-
 -- From-scratch version
@@ -58,6 +62,23 @@ instance showMaybe :: Show a => Show (Maybe a) where
 -}
 derive instance genericMaybe :: Generic (Maybe a) _
 instance showMaybe :: Show a => Show (Maybe a) where
+    show = genericShow
+
+----------------------------------------------------------------------------
+
+data Either a b = Left a | Right b
+
+{-
+    Write method for type classe Either
+        - Eq for Maybe
+        - Ord for Maybe
+        - Show for Maybe
+-}
+
+derive instance eqEither :: (Eq a, Eq b) => Eq (Either a b)
+derive instance ordEither :: (Ord a, Ord b) => Ord (Either a b)
+derive instance genericEither :: Generic (Either a b) _
+instance showEither :: (Show a, Show b) => Show (Either a b) where
     show = genericShow
 
 {-
@@ -81,4 +102,7 @@ test = do
     log "------------------"
     log $ show $ Just "abc"
     log $ show $ (Nothing :: Maybe Unit)
+    log "------------------"
+    log $ show $ (Left "left" :: Either _ Unit)
+    log $ show $ (Right (Just 42) :: Either Unit _)
 
