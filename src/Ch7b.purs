@@ -7,6 +7,8 @@ import Effect.Console (log)
 
 import Data.Generic.Rep (class Generic)
 import Data.Show.Generic (genericShow)
+import Data.Newtype (class Newtype)
+import Data.Maybe (Maybe(..))
 import Data.Int (fromString)
 import Data.String (Pattern(..), split)
 
@@ -70,14 +72,6 @@ instance fromCSVPerson :: FromCSV Person where
             }
         _ -> Nothing
 
---Test Data
-me :: Person
-me = Person {
-    name: FullName "Trung",
-    age: Age 25,
-    occupation: Doctor
-}
-
 --Test helpers
 derive newtype instance eqCSV :: Eq CSV
 
@@ -86,7 +80,20 @@ derive newtype instance eqAge :: Eq Age
 derive instance eqOccupation :: Eq Occupation
 derive instance eqPerson :: Eq Person
 
+derive instance genericPerson :: Generic Person _
+instance showPerson :: Show Person where
+    show = genericShow
+
+derive instance newtypeCSV :: Newtype CSV _
+derive newtype instance showCSV :: Show CSV
+
 test :: Effect Unit
 test = do
+    let me = Person {
+        name: FullName "Trung",
+        age: Age 25,
+        occupation: Doctor
+    }
+    log $ show $ toCSV me
     log $ show $ toCSV me == CSV "Trung,25,Doctor"
     log $ show $ (toCSV me # fromCSV) == Just me
