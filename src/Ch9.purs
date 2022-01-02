@@ -4,7 +4,7 @@ import Data.Generic.Rep (class Generic)
 import Data.Show.Generic (genericShow)
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (class Eq, class Show, Unit, show, ($), discard)
+import Prelude (class Eq, class Show, Unit, show, ($), discard, (==))
 
 
 -- Semigroup Typeclass
@@ -40,6 +40,11 @@ instance semigroupAndBool :: Semigroup AndBool where
     append _ _ = AFalse
 
 
+-- Monoid for AndBool
+instance monoidAndBool :: Monoid AndBool where
+    mempty = ATrue
+
+
 -- Test codes
 test :: Effect Unit
 test = do
@@ -47,3 +52,5 @@ test = do
     log $ show $ ATrue <> ATrue
     log $ show $ ATrue <> AFalse
     log $ show $ AFalse <> AFalse
+    log $ show $ mempty <> ATrue == ATrue
+    log $ show $ mempty <> AFalse == AFalse
