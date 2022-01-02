@@ -46,6 +46,11 @@ instance monoidAndBool :: Monoid AndBool where
 
 
 -- Test codes
+verifyAndBoolSemigroup :: Effect Unit
+verifyAndBoolSemigroup = do
+    log "verify AndBool Semigroup"
+    log $ show $ (ATrue <> ATrue) <> AFalse == ATrue <> (ATrue <> AFalse)
+
 test :: Effect Unit
 test = do
     log $ show $ "Chap 9 - Coding Abstract Algebra"
@@ -54,3 +59,4 @@ test = do
     log $ show $ AFalse <> AFalse
     log $ show $ mempty <> ATrue == ATrue
     log $ show $ mempty <> AFalse == AFalse
+    verifyAndBoolSemigroup
