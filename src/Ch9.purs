@@ -1,9 +1,12 @@
 module Ch9 where
 
-import Prelude (Unit, ($), show)
-
+import Data.Generic.Rep (class Generic)
+import Data.Show.Generic (genericShow)
 import Effect (Effect)
 import Effect.Console (log)
+import Prelude (class Eq, class Show, Unit, show, ($), discard)
+
+
 -- Semigroup Typeclass
 class Semigroup a where
     append :: a -> a -> a
@@ -24,8 +27,23 @@ class Semigroup a <= Monoid a where
     mempty :: a
 
 
--- Semigroup for AndBool
+-- data type AndBool -> Boolean set with Logical And operator
+data AndBool = AFalse | ATrue
+derive instance eqAndBool :: Eq AndBool
+derive instance genericAndBool :: Generic AndBool _
+instance showAndBool :: Show AndBool where
+    show = genericShow
 
+-- Semigroup for AndBool
+instance semigroupAndBool :: Semigroup AndBool where
+    append ATrue ATrue = ATrue
+    append _ _ = AFalse
+
+
+-- Test codes
 test :: Effect Unit
 test = do
     log $ show $ "Chap 9 - Coding Abstract Algebra"
+    log $ show $ ATrue <> ATrue
+    log $ show $ ATrue <> AFalse
+    log $ show $ AFalse <> AFalse
