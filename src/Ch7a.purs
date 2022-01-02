@@ -87,6 +87,7 @@ instance showEither :: (Show a, Show b) => Show (Either a b) where
 
 test :: Effect Unit
 test = do
+    log $ show $ "Chap 7a - Coding Typeclasses"
     log $ show $ Just 5 == Just 5
     log $ show $ Just 5 == Just 2
     log $ show $ Just 5 == Nothing

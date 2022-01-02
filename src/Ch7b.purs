@@ -84,6 +84,7 @@ instance fromCSVPerson :: FromCSV Person where
 -------------------------------------- Test codes --------------------------------------
 test :: Effect Unit
 test = do
+    log $ show $ "Chap 7b - Coding CSV encoding/decoding"
     let me = Person {
         name: FullName "Thanh Trung Dinh",
         age: Age 25,

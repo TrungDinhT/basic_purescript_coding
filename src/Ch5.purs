@@ -253,6 +253,7 @@ unzip (Tuple x y : ts) = unzip ts
 
 test :: Effect Unit
 test = do
+  log $ show $ "Chap 5 - Basic coding in Purescript"
   log $ show $ flip const 1 2
   log $ flip const 1 2 # show
   flip const 1 2 # show # log
