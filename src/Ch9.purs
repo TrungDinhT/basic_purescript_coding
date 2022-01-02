@@ -39,10 +39,26 @@ instance semigroupAndBool :: Semigroup AndBool where
     append ATrue ATrue = ATrue
     append _ _ = AFalse
 
-
 -- Monoid for AndBool
 instance monoidAndBool :: Monoid AndBool where
     mempty = ATrue
+
+
+-- data type OrBool -> Boolean set with Logical Or operator
+data OrBool = OFalse | OTrue
+derive instance eqOrBool :: Eq OrBool
+derive instance genericOrBool :: Generic OrBool _
+instance showOrBool :: Show OrBool where
+    show = genericShow
+
+-- Semigroup for OrBool
+instance semigroupOrBool :: Semigroup OrBool where
+    append OFalse OFalse = OFalse
+    append _ _ = OTrue
+
+-- Monoid for OrBool
+instance monoidOrBool :: Monoid OrBool where
+    mempty = OFalse
 
 
 -- Test codes
@@ -57,6 +73,17 @@ verifyAndBoolMonoid = do
     log $ show $ ATrue <> mempty == ATrue && mempty <> ATrue == ATrue
     log $ show $ AFalse <> mempty == AFalse && mempty <> AFalse == AFalse
 
+verifyOrBoolSemigroup :: Effect Unit
+verifyOrBoolSemigroup = do
+    log "verify OrBool Semigroup (1 test)"
+    log $ show $ (OFalse <> OTrue) <> OTrue == OFalse <> (OTrue <> OTrue)
+
+verifyOrBoolMonoid :: Effect Unit
+verifyOrBoolMonoid = do
+    log "verify OrBool Monoid (2 tests)"
+    log $ show $ OFalse <> mempty == mempty <> OFalse && OFalse <> mempty == OFalse
+    log $ show $ OTrue <> mempty == mempty <> OTrue && OTrue <> mempty == OTrue
+
 test :: Effect Unit
 test = do
     log $ show $ "Chap 9 - Coding Abstract Algebra"
@@ -67,3 +94,5 @@ test = do
     log $ show $ mempty <> AFalse == AFalse
     verifyAndBoolSemigroup
     verifyAndBoolMonoid
+    verifyOrBoolSemigroup
+    verifyOrBoolMonoid
