@@ -61,6 +61,31 @@ instance monoidOrBool :: Monoid OrBool where
     mempty = OFalse
 
 
+-- data type for Mod4
+data Mod4 = Zero | One | Two | Three
+
+-- Semigroup for Mod4
+instance semigroupMod4 :: Semigroup Mod4 where
+    append Zero x = x
+    append x Zero = x
+
+    append One One = Two
+    append One Two = Three
+    append One Three = Zero
+
+    append Two One = Three
+    append Two Two = Zero
+    append Two Three = One
+
+    append Three One = Zero
+    append Three Two = One
+    append Three Three = Two
+
+-- Monoid for Mod4
+instance monoidMod4 :: Monoid Mod4 where
+    mempty = Zero
+
+
 -- Test codes
 verifyAndBoolSemigroup :: Effect Unit
 verifyAndBoolSemigroup = do
