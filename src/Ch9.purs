@@ -19,6 +19,12 @@ class Semigroup a where
 infixr 5 append as <>
 
 
+-- Monoid Typeclass
+class Semigroup a <= Monoid a where
+    mempty :: a
+
+
+-- Semigroup for AndBool
 
 test :: Effect Unit
 test = do
