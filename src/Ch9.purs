@@ -22,6 +22,10 @@ class Semigroup a where
 infixr 5 append as <>
 
 
+-- Commutative Typeclass
+class Semigroup a <= Commutative a
+
+
 -- Monoid Typeclass
 class Semigroup a <= Monoid a where
     mempty :: a
@@ -96,6 +100,9 @@ instance groupMod4 :: Group Mod4 where
     ginverse One = Three
     ginverse Two = Two
     ginverse Three = One
+
+-- Commutative for Mod4 (because the addition operator is actually commutative)
+instance commutativeMod4 :: Commutative Mod4
 
 
 -- Test codes
