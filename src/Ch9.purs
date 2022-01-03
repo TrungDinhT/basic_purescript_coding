@@ -90,6 +90,13 @@ instance semigroupMod4 :: Semigroup Mod4 where
 instance monoidMod4 :: Monoid Mod4 where
     mempty = Zero
 
+-- Group for Mod4
+instance groupMod4 :: Group Mod4 where
+    ginverse Zero = Zero
+    ginverse One = Three
+    ginverse Two = Two
+    ginverse Three = One
+
 
 -- Test codes
 verifyAndBoolSemigroup :: Effect Unit
