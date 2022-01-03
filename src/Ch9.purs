@@ -27,6 +27,11 @@ class Semigroup a <= Monoid a where
     mempty :: a
 
 
+-- Group Typeclass
+class Monoid a <= Group a where
+    ginverse :: a -> a
+
+
 -- data type AndBool -> Boolean set with Logical And operator
 data AndBool = AFalse | ATrue
 derive instance eqAndBool :: Eq AndBool
