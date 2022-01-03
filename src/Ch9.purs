@@ -72,6 +72,10 @@ instance monoidOrBool :: Monoid OrBool where
 
 -- data type for Mod4
 data Mod4 = Zero | One | Two | Three
+derive instance eqMod4 :: Eq Mod4
+derive instance genericMod4 :: Generic Mod4 _
+instance showMod4 :: Show Mod4 where
+    show = genericShow
 
 -- Semigroup for Mod4
 instance semigroupMod4 :: Semigroup Mod4 where
