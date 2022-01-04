@@ -1,5 +1,6 @@
 module Ch9 where
 
+import Ch7a (Maybe(..))
 import Data.Generic.Rep (class Generic)
 import Data.Show.Generic (genericShow)
 import Effect (Effect)
@@ -109,6 +110,38 @@ instance groupMod4 :: Group Mod4 where
 instance commutativeMod4 :: Commutative Mod4
 
 
+-- Appending 2 Maybe -> return first result
+newtype First a = First (Maybe a)
+derive instance genericFirst :: Generic (First a) _
+instance showFirst :: Show a => Show (First a) where
+    show = genericShow
+
+-- Semigroup for First
+instance firstSemigroup :: Semigroup (First a) where
+    append (First Nothing) last = last
+    append first _ = first
+
+-- Monoid for First
+instance firstMonoid :: Monoid (First a) where
+    mempty = First Nothing
+
+
+-- Appending 2 Maybe -> return last result
+newtype Last a = Last (Maybe a)
+derive instance genericLast :: Generic (Last a) _
+instance showLast :: Show a => Show (Last a) where
+    show = genericShow
+
+-- Semigroup for Last
+instance lastSemigroup :: Semigroup (Last a) where
+    append first (Last Nothing) = first
+    append _ last = last
+
+-- Monoid for Last
+instance lastMonoid :: Monoid (Last a) where
+    mempty = Last Nothing
+
+
 -- Test codes
 verifyAndBoolSemigroup :: Effect Unit
 verifyAndBoolSemigroup = do
@@ -159,3 +192,5 @@ test = do
     verifyOrBoolMonoid
     verifyMod4Semigroup
     verifyMod4Monoid
+    log $ show $ First Nothing <> First (Just 77)
+    log $ show $ Last (Just 1) <> Last (Just 99)
