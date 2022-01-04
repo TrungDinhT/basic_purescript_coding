@@ -132,6 +132,19 @@ verifyOrBoolMonoid = do
     log $ show $ OFalse <> mempty == mempty <> OFalse && OFalse <> mempty == OFalse
     log $ show $ OTrue <> mempty == mempty <> OTrue && OTrue <> mempty == OTrue
 
+verifyMod4Semigroup :: Effect Unit
+verifyMod4Semigroup = do
+    log "verify Mod4 Semigroup (1 test)"
+    log $ show $ (One <> Two) <> Three == One <> (Two <> Three)
+
+verifyMod4Monoid :: Effect Unit
+verifyMod4Monoid = do
+    log "verify Mod4 Monoid (4 tests)"
+    log $ show $ mempty <> Zero == Zero <> mempty && mempty <> Zero == Zero
+    log $ show $ mempty <> One == One <> mempty && mempty <> One == One
+    log $ show $ mempty <> Two == Two <> mempty && mempty <> Two == Two
+    log $ show $ mempty <> Three == Three <> mempty && mempty <> Three == Three
+
 test :: Effect Unit
 test = do
     log $ show $ "Chap 9 - Coding Abstract Algebra"
@@ -144,3 +157,5 @@ test = do
     verifyAndBoolMonoid
     verifyOrBoolSemigroup
     verifyOrBoolMonoid
+    verifyMod4Semigroup
+    verifyMod4Monoid
