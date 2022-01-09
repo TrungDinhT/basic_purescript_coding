@@ -1,9 +1,10 @@
 module Ch11 where
 
-import Data.List (List(..), foldl, (:))
+import Data.List (List(..), (:), foldl)
 import Data.List.Types (NonEmptyList(..))
 import Data.Maybe (Maybe(..))
-import Data.NonEmpty (NonEmpty(..), (:|))
+import Data.NonEmpty ((:|))
+import Data.Semigroup.Foldable (foldl1)
 import Effect (Effect)
 import Effect.Console (log)
 import Prelude (class Ord, Unit, show, discard, type (~>), ($), (>), negate)
@@ -35,7 +36,12 @@ findMax (head : tail) = Just $ foldl max head tail
 
 -- findMaxNE
 findMaxNE :: ∀ a. Ord a => NonEmptyList a -> a
+{-
+-- Using foldl
 findMaxNE (NonEmptyList (NonEmpty head tail)) = foldl max head tail
+-}
+-- Using foldl1
+findMaxNE (NonEmptyList l) = foldl1 max l
 
 
 -- Test codes
