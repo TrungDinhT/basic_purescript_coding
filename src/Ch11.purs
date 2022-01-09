@@ -6,9 +6,12 @@ import Data.Maybe (Maybe(..))
 import Data.NonEmpty (NonEmpty, (:|))
 -- import Data.Semigroup.Foldable (foldl1) -- not import this to implement ourselves
 import Data.Foldable (class Foldable)
+import Data.Ord (class Ord)
+import Data.Semiring (class Semiring, zero)
+import Data.Unit (Unit)
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (class Ord, Unit, show, discard, type (~>), ($), (>), negate)
+import Prelude (type (~>), discard, negate, show, ($), (+), (>))
 
 
 -- reverse with foldl (because we want to pass the new list as the State to next recursive)
