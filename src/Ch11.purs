@@ -53,6 +53,21 @@ foldl1 f (NonEmpty x xs) = foldl f x xs
 foldl1 f (x :| xs) = foldl f x xs 
 
 
+-- sum
+sum :: ∀ f a. Foldable f => Semiring a => f a -> a
+{-
+-- Manually with recursive
+sum Nil = 0
+sum (x : xs) = x + sum xs
+-- Manually with tail recursive
+sum = go 0 where
+    go acc Nil = acc
+    go acc (x : xs) = go (acc + x) xs
+-}
+-- Use foldl
+sum = foldl (+) zero
+
+
 -- Test codes
 test :: Effect Unit
 test = do
@@ -66,3 +81,7 @@ test = do
     log $ show $ findMax ("a" : "bbb" : "c" : Nil)
     log $ show $ findMaxNE (NonEmptyList $ 37 :| (311 : -1 : 2 : 84 : Nil))
     log $ show $ findMaxNE (NonEmptyList $ "a" :| ("bbb" : "c" : Nil))
+    log $ show $ sum (1 : 2 : 3 : Nil)
+    log $ show $ sum (1.1 : 2.2 : 3.3 : Nil)
+    log $ show $ sum [1, 2, 3]
+    log $ show $ sum [1.1, 2.2, 3.3]
