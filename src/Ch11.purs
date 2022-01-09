@@ -3,8 +3,9 @@ module Ch11 where
 import Data.List (List(..), (:), foldl)
 import Data.List.Types (NonEmptyList(..))
 import Data.Maybe (Maybe(..))
-import Data.NonEmpty ((:|))
-import Data.Semigroup.Foldable (foldl1)
+import Data.NonEmpty (NonEmpty, (:|))
+-- import Data.Semigroup.Foldable (foldl1) -- not import this to implement ourselves
+import Data.Foldable (class Foldable)
 import Effect (Effect)
 import Effect.Console (log)
 import Prelude (class Ord, Unit, show, discard, type (~>), ($), (>), negate)
@@ -38,10 +39,18 @@ findMax (head : tail) = Just $ foldl max head tail
 findMaxNE :: ∀ a. Ord a => NonEmptyList a -> a
 {-
 -- Using foldl
-findMaxNE (NonEmptyList (NonEmpty head tail)) = foldl max head tail
+findMaxNE (NonEmptyList (head :| tail)) = foldl max head tail
 -}
 -- Using foldl1
 findMaxNE (NonEmptyList l) = foldl1 max l
+
+-- foldl1
+foldl1 :: ∀ f a. Foldable f => (a -> a -> a) -> NonEmpty f a -> a
+{-
+-- Pattern matching with NonEmpty data constructor
+foldl1 f (NonEmpty x xs) = foldl f x xs
+-}
+foldl1 f (x :| xs) = foldl f x xs 
 
 
 -- Test codes
