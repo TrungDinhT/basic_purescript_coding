@@ -1,17 +1,17 @@
 module Ch11 where
 
-import Data.List (List(..), (:), foldl)
+import Data.List (List(..), (:), singleton)
 import Data.List.Types (NonEmptyList(..))
 import Data.Maybe (Maybe(..))
 import Data.NonEmpty (NonEmpty, (:|))
 -- import Data.Semigroup.Foldable (foldl1) -- not import this to implement ourselves
-import Data.Foldable (class Foldable)
+import Data.Foldable (class Foldable, foldl, foldr, foldMap)
 import Data.Ord (class Ord)
 import Data.Semiring (class Semiring, zero)
 import Data.Unit (Unit)
 import Effect (Effect)
 import Effect.Console (log)
-import Prelude (type (~>), discard, negate, show, ($), (+), (>))
+import Prelude (type (~>), discard, negate, show, ($), (+), (>), (<>), (<<<))
 
 
 -- reverse with foldl (because we want to pass the new list as the State to next recursive)
@@ -71,6 +71,21 @@ sum = go 0 where
 sum = foldl (+) zero
 
 
+-- Tree data type
+data Tree a = Leaf a | Node (Tree a) (Tree a)
+
+-- toList to traverse the tree
+toList :: Tree ~> List
+toList (Leaf value) = singleton value 
+toList (Node left right) = toList left <> toList right
+
+-- Foldable for Tree
+instance foldableTree :: Foldable Tree where
+    foldr f acc = foldr f acc <<< toList
+    foldl f acc = foldl f acc <<< toList
+    foldMap f = foldMap f <<< toList
+
+
 -- Test codes
 test :: Effect Unit
 test = do
@@ -88,3 +103,5 @@ test = do
     log $ show $ sum (1.1 : 2.2 : 3.3 : Nil)
     log $ show $ sum [1, 2, 3]
     log $ show $ sum [1.1, 2.2, 3.3]
+    log $ show $ toList (Node (Node (Leaf 5) (Node (Leaf (-1)) (Leaf 14))) (Leaf 99))
+    log $ show $ sum (Node (Node (Leaf 5) (Node (Leaf (-1)) (Leaf 14))) (Leaf 99))
