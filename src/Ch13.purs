@@ -4,6 +4,7 @@ import Data.Eq (class Eq)
 import Data.Generic.Rep (class Generic)
 import Data.Show (class Show)
 import Data.Show.Generic (genericShow)
+import Data.String.Common (toUpper)
 import Data.Unit (Unit)
 import Effect (Effect)
 import Effect.Console (log)
@@ -82,6 +83,12 @@ instance threepleFunctor :: Functor (Threeple a b) where
     map f (Threeple x y z) = Threeple x y $ f z
 
 
+-- Bifunctor for Either
+instance eitherBifunctor :: Bifunctor Either where
+    bimap f _ (Left err) = Left $ f err
+    bimap _ g (Right x) = Right $ g x
+
+
 
 -- Test codes
 divideBy2 :: Int -> Int
@@ -117,3 +124,7 @@ test = do
     log $ show $ "Tuple identity: " <> show ((identity <$> Tuple 10 20) == Tuple 10 20)
     log $ show $ "Tuple composition: " 
         <> show (map (divideBy2 <<< multiplyBy2) (Tuple 10 20) == (map divideBy2 <<< map multiplyBy2) (Tuple 10 20))
+    log $ show $ rmap (_ * 2) $ Left "error reason"
+    log $ show $ rmap (_ * 2) $ (Right 10 :: Either Unit _)
+    log $ show $ lmap toUpper $ (Left "error reason" :: Either _ Unit)
+    log $ show $ lmap toUpper $ Right 10
