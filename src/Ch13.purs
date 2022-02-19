@@ -17,6 +17,17 @@ class Functor f where
 infixl 4 map as <$>
 
 
+-- Bifunctor Typeclass
+class Bifunctor f where
+    bimap :: ∀ a b c d. (a -> c) -> (b -> d) -> f a b -> f c d
+
+rmap :: ∀ f a b c. Bifunctor f => (b -> c) -> f a b -> f a c
+rmap = bimap identity
+
+lmap :: ∀ f a b c. Bifunctor f => (a -> c) -> f a b -> f c b
+lmap f = bimap f identity
+
+
 
 -- Maybe data type
 data Maybe a = Nothing | Just a
