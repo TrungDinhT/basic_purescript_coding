@@ -94,6 +94,11 @@ instance tupleBifunctor :: Bifunctor Tuple where
     bimap f g (Tuple x y) = Tuple (f x) (g y) 
 
 
+-- Bifunctor for Threeple
+instance threepleBifunctor :: Bifunctor (Threeple a) where
+    bimap g h (Threeple x y z) = Threeple x (g y) (h z)
+
+
 
 -- Test codes
 divideBy2 :: Int -> Int
@@ -113,7 +118,6 @@ verifyMaybeComposition = do
         <> show (map (divideBy2 <<< multiplyBy2) Nothing == (Nothing :: Maybe Int))
     log $ show $ "Maybe composition for Just: " 
         <> show (map (divideBy2 <<< multiplyBy2) (Just 10) == (map divideBy2 <<< map multiplyBy2) (Just 10))
-
 
 test :: Effect Unit
 test = do
@@ -136,3 +140,6 @@ test = do
     log $ show $ rmap (_ * 2) $ Tuple 80 40
     log $ show $ lmap (_ / 2) $ Tuple 80 40
     log $ show $ bimap (_ / 2) (_ * 2) $ Tuple 80 40
+    log $ show $ rmap (_ * 2) $ Threeple 99 80 40
+    log $ show $ lmap (_ / 2) $ Threeple 99 80 40
+    log $ show $ bimap (_ / 2) (_ * 2) $ Threeple 99 80 40
