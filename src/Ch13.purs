@@ -31,6 +31,14 @@ instance showEither :: (Show a, Show b) => Show (Either a b) where
     show = genericShow
 
 
+-- Tuple data type
+data Tuple a b = Tuple a b
+derive instance genericTuple :: Generic (Tuple a b) _
+instance showTuple :: (Show a, Show b) => Show (Tuple a b) where
+    show = genericShow
+
+
+
 -- Functor for Maybe
 instance maybeFunctor :: Functor Maybe where
     map _ Nothing = Nothing
@@ -43,6 +51,12 @@ instance eitherFunctor :: Functor (Either a) where
     map f (Right x) = Right $ f x
 
 
+-- Functor for Tuple
+instance tupleFunctor :: Functor (Tuple a) where
+    map f (Tuple x y) = Tuple x $ f y
+
+
+
 -- Test codes
 test :: Effect Unit
 test = do
@@ -51,3 +65,4 @@ test = do
     log $ show $ (_ / 2) <$> Nothing
     log $ show $ (_ / 2) <$> (Right 10 :: Either Unit _)
     log $ show $ (_ / 2) <$> Left "error reason"
+    log $ show $ (_ / 2) <$> Tuple 10 20
